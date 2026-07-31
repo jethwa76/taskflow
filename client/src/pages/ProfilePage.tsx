@@ -1,0 +1,11 @@
+import { Camera, Mail, MapPin, Pencil, ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
+import { useApp } from '../context/AppContext'
+
+export function ProfilePage() {
+  const { user, tasks, updateProfile } = useApp()
+  const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState({ name: user.name, email: user.email, role: user.role })
+  const save = () => { updateProfile(form); setEditing(false) }
+  return <div className="profile-page"><div className="page-heading"><div><span className="eyebrow">Your identity</span><h1>Profile</h1><p>Tell your workspace a little more about you.</p></div><button className="button button-ghost" onClick={() => setEditing((value) => !value)}><Pencil size={15} /> {editing ? 'Cancel' : 'Edit profile'}</button></div><div className="profile-layout"><section className="panel profile-card"><div className="profile-cover"><div className="profile-avatar">{user.initials}<button aria-label="Change profile photo"><Camera size={15} /></button></div></div><div className="profile-details"><h2>{user.name}</h2><p>{user.role}</p><div className="profile-meta"><span><Mail size={14} />{user.email}</span><span><MapPin size={14} />Remote / GMT+5:30</span></div><div className="profile-stats"><div><strong>{tasks.length}</strong><span>Total tasks</span></div><div><strong>{tasks.filter((task) => task.status === 'Completed').length}</strong><span>Completed</span></div><div><strong>14</strong><span>Day streak</span></div></div></div></section><section className="panel profile-form-panel"><div className="panel-header"><div><h2>Personal details</h2><p>Keep your profile information up to date.</p></div><ShieldCheck className="verified-icon" size={20} /></div><div className="form-stack profile-form"><label>Full name<input disabled={!editing} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></label><label>Email address<input disabled={!editing} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></label><label>Role<input disabled={!editing} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} /></label>{editing && <button className="button button-primary" onClick={save}>Save changes</button>}</div></section></div></div>
+}
